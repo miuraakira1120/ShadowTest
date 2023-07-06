@@ -126,7 +126,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//ルートオブジェクトのUpdateを呼んだあと、自動的に子、孫のUpdateが呼ばれる
 				pRootObject->UpdateSub();
 
+				//シャドウマップ作成
+				//ライトの位置から見た画像を、遠くは白、近くは黒のグレースケールで表す
+				Camera::SetPosition(XMFLOAT3(-15, 20, -2));
+				Camera::SetTarget(XMFLOAT3(0, 0, 0));
+				Camera::Update();
+				Direct3D::lightView_ = Camera::GetViewMatrix();
+
+				Direct3D::BeginDrawToTexture();
+				Direct3D::nowShaderType;
+
+				pRootObject->DrawSub();
+
+				//描画終了
+				Direct3D::EndDraw();
+
 				//カメラを更新
+				//通常の描画
+				Camera::SetPosition(XMFLOAT3(0, 5, -8));
+				Camera::SetTarget(XMFLOAT3(0, 0, 0));
 				Camera::Update();
 
 				//エフェクトの更新

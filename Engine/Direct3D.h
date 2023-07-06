@@ -25,10 +25,13 @@ namespace Direct3D
 	//【コンテキスト】
 	//GPUに命令を出すためのやつ
 	extern ID3D11DeviceContext*    pContext_;
+	extern XMMATRIX lightView_;
+	extern XMMATRIX clipToUV_;
+	extern ID3D11ShaderResourceView* pDepthSRV_;
 
 
 	//■シェーダー関連で必要なセット
-	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD, SHADER_MAX};	//3タイプ（3D用、2D用、当たり判定枠表示用）
+	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD, SHADER_SHADOW, SHADER_MAX};	//3タイプ（3D用、2D用、当たり判定枠表示用）
 	struct SHADER_BUNDLE
 	{
 		//【頂点入力レイアウト情報】
@@ -48,6 +51,7 @@ namespace Direct3D
 		//頂点の表示位置確定後、画面のどのピクセルを光らせればいいか求めるもの
 		ID3D11RasterizerState*	pRasterizerState;
 	};
+	extern SHADER_BUNDLE shaderBundle[SHADER_MAX];
 
 	//■ブレンドモード
 	enum BLEND_MODE
@@ -61,7 +65,7 @@ namespace Direct3D
 	extern int		screenWidth_;		//スクリーンの幅
 	extern int		screenHeight_;		//スクリーンの高さ
 	extern bool		isDrawCollision_;	//コリジョンを表示するかフラグ
-
+	extern SHADER_TYPE nowShaderType;
 
 
 
@@ -86,6 +90,9 @@ namespace Direct3D
 	//引数：blendMode	BLEND_DEFAULT	通常
 	//					BLEND_ADD		加算合成（パーティクル用）
 	void SetBlendMode(BLEND_MODE blendMode);
+
+	//テクスチャへ深度情報を描く
+	void BeginDrawToTexture();
 
 	//描画開始
 	void BeginDraw();
